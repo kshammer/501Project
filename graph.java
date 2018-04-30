@@ -7,6 +7,7 @@ public class graph{
     static int maxDegree = 0;
     static int maxInit = 0;
     static int totalUsed = 0;
+    static int bigColor = 0;
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         String[] nodedge = sc.nextLine().split("\\s+");
@@ -25,6 +26,7 @@ public class graph{
                 }
                 addEdge(first, second);  
             }else{
+                //adding something to front of arraylist to offset
                 node toAdd = new node(0);
                 toAdd.color = 999999999;
                 nodes.add(toAdd);
@@ -45,10 +47,17 @@ public class graph{
         colorGraph();
         //optimize();
        // clean();
-        System.out.println(maxDegree);
-        for(int t = 1; t < nodes.size(); t++){
-           System.out.println(nodes.get(t).color);
-        }  
+        output(); 
+    }
+    public static void output(){
+        if(bigColor - maxInit > 0){
+            System.out.println(bigColor - maxInit);
+        }else{
+            System.out.println(0);
+        }
+        for(int i = 1; i < nodes.size(); i++){
+            System.out.print(nodes.get(i).color + " ");
+        }
     }
     public static boolean checkArray(int num){
         boolean toReturn = false;
@@ -116,6 +125,9 @@ public class graph{
                     if(!usedColor.contains(u) && !nodes.get(i).pre){
                         //System.out.println("NEW COLOR " + u);
                         nodes.get(i).color = u;
+                        if(u > bigColor){
+                            bigColor = u;
+                        }
                         break;
                     }
                 }
