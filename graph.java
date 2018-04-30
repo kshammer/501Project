@@ -2,8 +2,11 @@ import java.util.*;
 import java.lang.*;
 
 public class graph{
-    static ArrayList<node> nodes = new ArrayList<node>();
-    static int current;
+    static List<node> nodes = new ArrayList<node>();
+    static int minDegree = 0; //The smallest degree that is a neighbor to the largest degree node
+    static int maxDegree = 0;
+    static int maxInit = 0;
+    static int totalUsed = 0;
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         String[] nodedge = sc.nextLine().split("\\s+");
@@ -22,11 +25,30 @@ public class graph{
                 }
                 addEdge(first, second);  
             }else{
+                node toAdd = new node(0);
+                toAdd.color = 999999999;
+                nodes.add(toAdd);
+                nodes.sort((n1, n2) -> Integer.compare(n1.name, n2.name));
                 for(int i = 0; i < nums.length; i++){
-                    nodes.get(i).color = Integer.parseIntnums[i];
+                    int numz = Integer.parseInt(nums[i]);
+                    if(numz != 0){
+                        nodes.get(i + 1).color = numz;
+                        nodes.get(i + 1).pre = true;
+                        if(nodes.get(i + 1).color > maxInit){
+                            maxInit = nodes.get(i + 1).color;
+                        }
+                    }
                 }
             }
-        }   
+        }
+        getMaxClique();
+        colorGraph();
+        //optimize();
+       // clean();
+        System.out.println(maxDegree);
+        for(int t = 1; t < nodes.size(); t++){
+           System.out.println(nodes.get(t).color);
+        }  
     }
     public static boolean checkArray(int num){
         boolean toReturn = false;
@@ -51,6 +73,73 @@ public class graph{
             }
         }
     }
+    public static void clean(){
+        List<Integer> colors = new ArrayList<Integer>();
+        for(int i = 1; i < nodes.size(); i++){
+            for(int p = 0; p < nodes.get(i).neighbors.size(); p++){
+                colors.add(nodes.get(nodes.get(i).neighbors.get(p).dest).color);
+            }
+            if(colors.contains(nodes.get(i).color)){
+                if(nodes.get(i).pre){
+
+                }
+            }
+        }
+    }
+    public static void optimize(){
+        List<Integer> colors = new ArrayList<Integer>();
+        for(int i = 1; i < nodes.size(); i++){
+            for(int p = 0; p < nodes.get(i).neighbors.size(); p++){
+                colors.add(nodes.get(nodes.get(i).neighbors.get(p).dest).color);
+            }
+            for(int u = 1; u < minDegree; u++){
+                if(!colors.contains(u) && !nodes.get(i).pre){
+                    nodes.get(i).color = u;
+                    break;
+                }
+            }
+            colors.clear();
+        }
+    }
+    public static void colorGraph(){
+        List<Integer> usedColor = new ArrayList<Integer>();
+        for(int i = 1; i < nodes.size(); i++){
+            usedColor.add(0);
+           // System.out.println("OLD COLOR " +  nodes.get(i).color);
+            if(nodes.get(i).color == 0){
+                for(int p = 0; p < nodes.get(i).neighbors.size(); p++){
+                    usedColor.add(nodes.get(nodes.get(i).neighbors.get(p).dest).color);
+                }
+                for(int u = 1;  u < maxDegree; u++){
+                    //
+                    //System.out.println("trying " + u);
+                    if(!usedColor.contains(u) && !nodes.get(i).pre){
+                        //System.out.println("NEW COLOR " + u);
+                        nodes.get(i).color = u;
+                        break;
+                    }
+                }
+            }
+            usedColor.clear();
+        }
+
+    }
+    public static void getMaxClique(){
+        for(int i = 0; i< nodes.size(); i++){
+            if(nodes.get(i).neighbors.size() > maxDegree){
+                maxDegree = nodes.get(i).neighbors.size();
+            }
+            if(nodes.get(i).neighbors.size() > minDegree){
+                int smallest = nodes.get(i).neighbors.size();
+                for(int p = 0; p < nodes.get(i).neighbors.size(); p++){
+                    if(smallest > nodes.get(nodes.get(i).neighbors.get(p).dest).neighbors.size()){
+                        smallest = nodes.get(nodes.get(i).neighbors.get(p).dest).neighbors.size();
+                    }
+                }
+                minDegree = smallest;
+            }
+        }
+    }
 }
 
 
@@ -59,6 +148,7 @@ class node{
     int color;
     ArrayList<edge> neighbors = new ArrayList<edge>();
     int name;
+    boolean pre = false;
     public node(int n){
         this.name = n;
         this.color = 0;
