@@ -212,14 +212,17 @@ public class Graph {
     //FIX THIS 
     public String toString() {
         StringBuilder s = new StringBuilder();
-        s.append(V + " " + E + NEWLINE);
+        s.append((V) + " " + (E) + NEWLINE);
         for (int v = 0; v < V; v++) {
-            s.append(v + ": ");
             for (int w : adj[v]) {
-                s.append(w + " ");
+                s.append((v + 1) + " ");
+                s.append((w + 1) + " ");
+                s.append(NEWLINE);
+                
             }
-            s.append(NEWLINE);
+            
         }
+        s.setLength(s.length() -2);
         return s.toString();
     }
 

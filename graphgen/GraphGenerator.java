@@ -410,9 +410,8 @@ public class GraphGenerator {
         int V1 = V/2;
         int V2 = V - V1;
 
-        StdOut.println("simple");
         StdOut.println(simple(V, E));
-        StdOut.println();
+        StdOut.print("0 0 0");
 
     }
 
