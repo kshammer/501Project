@@ -28,7 +28,7 @@ public class graph{
             }else{
                 //adding something to front of arraylist to offset
                 node toAdd = new node(0);
-                toAdd.color = 999999999;
+                toAdd.color = 0;
                 nodes.add(toAdd);
                 nodes.sort((n1, n2) -> Integer.compare(n1.name, n2.name));
                 for(int i = 0; i < nums.length; i++){
@@ -46,8 +46,18 @@ public class graph{
         getMaxClique();
         colorGraph();
         //optimize();
-       // clean();
-        output(); 
+        output();
+        //output2(); 
+    }
+    public static void output2(){
+        System.out.println(maxDegree);
+        int maxColor = 0;
+        for(int i = 0; i < nodes.size(); i++){
+            if(nodes.get(i).color > maxColor){
+                maxColor = nodes.get(i).color;
+            }
+        }
+        System.out.println(maxColor);
     }
     public static void output(){
         if(bigColor - maxInit > 0){
@@ -79,19 +89,6 @@ public class graph{
             if(nodes.get(i).name == s){
                 edge toAdd = new edge(s,f);
                 nodes.get(i).addNeighbor(toAdd);
-            }
-        }
-    }
-    public static void clean(){
-        List<Integer> colors = new ArrayList<Integer>();
-        for(int i = 1; i < nodes.size(); i++){
-            for(int p = 0; p < nodes.get(i).neighbors.size(); p++){
-                colors.add(nodes.get(nodes.get(i).neighbors.get(p).dest).color);
-            }
-            if(colors.contains(nodes.get(i).color)){
-                if(nodes.get(i).pre){
-
-                }
             }
         }
     }
